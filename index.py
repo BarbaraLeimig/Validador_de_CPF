@@ -1,5 +1,11 @@
 #Validação de CPF
 #pip install Flask
+import pymysql
+
+db = pymysql.connect(host="127.0.0.1",
+                     user="root",
+                     password="teste",
+                     database="ValidaCPF")
 
 from flask import Flask, render_template, request
 
@@ -30,12 +36,29 @@ def calcula_cpf(cpf):
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # Nome do arquivo HTML que contém o formulário
+  cursor = db.cursor()
+  sql = "SELECT * FROM parceiros;"
+  cursor.execute(sql)
+  parceiros = cursor.fetchall()
+  return render_template('index.html', parceiros = parceiros)  # Nome do arquivo HTML que contém o formulário
 
 @app.route('/validar_cpf', methods=['POST'])
 def validar_cpf():
     cpf = request.form['cpf']  # 'cpf' é o nome do campo no seu formulário HTML
     if calcula_cpf(cpf):
+      nome = request.form['nome']
+      cursor = db.cursor()
+
+      # Define a consulta SQL para inserir o CPF na tabela
+      sql= "INSERT INTO parceiros (cpf, nome) VALUES ('"
+      sql += cpf +  "','" + nome + "');"
+
+      # executa a consulta SQL como o valor do CPF
+      cursor.execute(sql)
+
+      #Confirma a inserção dos dados no banco de dados
+      db.commit()
+      
       return '<p>CPF válido e processado.</p>' +\
              '<p>Para inserir um novo parceiro, clique <a href="http://127.0.0.1:5000/">aqui!</a></p>'
     else:
