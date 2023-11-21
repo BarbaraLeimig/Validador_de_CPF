@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Validar CPF</title>
+  </head>
+  <body>
+    <section></section>
+    <h1>Formulário de Cadastro</h1>
+    <form action="/validar_cpf" method="post">
+      Nome:
+      <input type="text" name="nome" required />
+      <br />
+      CPF:
+      <input type="text" name="cpf" required />
+      <br />
+      <input type="submit" value="Validar CPF" />
+    </form>
+    <br />
+
+    <table>
+      <thead>
+        <tr>
+          <th>CPF</th>
+          <th>Nome</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for parceiro in parceiros %}
+        <tr>
+          <td>{{ parceiro [0] }}</td>
+          <td>{{ parceiro [1] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
